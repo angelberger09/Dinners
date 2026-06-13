@@ -1,0 +1,96 @@
+{
+  "updated": "2026-06-13",
+  "notes": "Starter dinner library focused on low-cost, stretchable meals with gluten-free and dairy-free options for Angel plus flexible gluten/dairy options for the rest of the household.",
+  "dinners": [
+    {
+      "id": "rice-bowls",
+      "name": "Rice Bowls",
+      "base": ["rice", "beans", "frozen vegetables", "salsa"],
+      "optional_proteins": ["egg", "chicken", "ground meat", "tuna"],
+      "angel_safe_notes": "Use gluten-free labeled beans/salsa and keep toppings dairy-free.",
+      "household_notes": "Others can add cheese, sour cream, or regular sauces if wanted.",
+      "prep_notes": "Freeze cooked rice flat in bags and portion beans separately."
+    },
+    {
+      "id": "potato-hash",
+      "name": "Potato Hash",
+      "base": ["potatoes", "onions", "cabbage", "carrots"],
+      "optional_proteins": ["eggs", "ground meat", "chicken"],
+      "angel_safe_notes": "Naturally gluten-free and dairy-free if cooked with oil and safe seasonings.",
+      "household_notes": "Good picky-friendly base because toppings can be added separately.",
+      "prep_notes": "Roast or par-cook diced potatoes ahead, then reheat in a skillet."
+    },
+    {
+      "id": "bean-chili",
+      "name": "Bean Chili",
+      "base": ["beans", "lentils", "canned tomatoes", "onions", "frozen corn"],
+      "optional_proteins": ["ground turkey", "ground beef"],
+      "angel_safe_notes": "Use lentils/beans with celiac-safe labeling and no wheat/milk facility advisory.",
+      "household_notes": "Others can add cheese or crackers separately.",
+      "prep_notes": "Freeze in single portions or use as a topping for potatoes and rice."
+    },
+    {
+      "id": "fried-rice",
+      "name": "Fried Rice",
+      "base": ["leftover rice", "eggs", "frozen mixed vegetables", "onion"],
+      "optional_proteins": ["chicken", "tuna", "ground meat"],
+      "angel_safe_notes": "Use gluten-free tamari if adding soy-sauce flavor; otherwise season with salt, garlic, onion, and acid.",
+      "household_notes": "Can be made plain for picky eaters and sauced individually.",
+      "prep_notes": "Best with chilled or frozen cooked rice."
+    },
+    {
+      "id": "loaded-baked-potatoes",
+      "name": "Loaded Baked Potatoes",
+      "base": ["potatoes", "beans or chili", "salsa"],
+      "optional_proteins": ["chicken", "ground meat", "eggs"],
+      "angel_safe_notes": "Keep Angel toppings dairy-free; use chili/beans that are confirmed gluten-free.",
+      "household_notes": "Others can add cheese, sour cream, or bacon bits if available.",
+      "prep_notes": "Bake extra potatoes and reheat throughout the week."
+    },
+    {
+      "id": "lentil-tomato-pasta",
+      "name": "Lentil Tomato Pasta",
+      "base": ["pasta", "lentils", "tomato sauce", "onions", "carrots"],
+      "optional_proteins": ["ground meat"],
+      "angel_safe_notes": "Use gluten-free pasta and safe lentils for Angel's portion.",
+      "household_notes": "Use cheaper regular pasta for the boys and keep sauce separate if needed.",
+      "prep_notes": "Make one sauce and serve over separate pasta types."
+    },
+    {
+      "id": "chicken-rice-soup",
+      "name": "Chicken Rice Soup",
+      "base": ["chicken thighs or drumsticks", "rice", "carrots", "onions", "frozen vegetables", "bouillon"],
+      "optional_proteins": [],
+      "angel_safe_notes": "Use gluten-free bouillon and no dairy.",
+      "household_notes": "Serve with regular bread/crackers separately for anyone who wants them.",
+      "prep_notes": "Cook a big pot and freeze in single-serving containers."
+    },
+    {
+      "id": "cabbage-taco-bowls",
+      "name": "Cabbage Taco Bowls",
+      "base": ["rice", "ground meat or beans", "sauteed cabbage", "salsa", "corn tortillas"],
+      "optional_proteins": ["eggs", "chicken"],
+      "angel_safe_notes": "Use corn tortillas and gluten-free seasonings for Angel.",
+      "household_notes": "Flour tortillas can be used for egg wraps or burritos for the boys.",
+      "prep_notes": "Batch cook taco meat stretched with beans or safe lentils."
+    },
+    {
+      "id": "chickpea-curry-skillet",
+      "name": "Chickpea Curry-ish Skillet",
+      "base": ["chickpeas", "frozen spinach or vegetables", "canned tomatoes", "rice", "curry-style seasoning"],
+      "optional_proteins": ["chicken"],
+      "angel_safe_notes": "Naturally gluten-free/dairy-free if chickpeas and seasonings are safe.",
+      "household_notes": "Keep spice level mild and add heat individually.",
+      "prep_notes": "Freeze as rice skillet dump bags or sauce portions."
+    },
+    {
+      "id": "egg-and-bean-breakfast-tacos",
+      "name": "Egg and Bean Breakfast Tacos",
+      "base": ["tortillas", "scrambled eggs", "beans", "salsa", "sauteed onions or cabbage"],
+      "optional_proteins": ["ground meat", "chicken"],
+      "angel_safe_notes": "Angel said they will not eat the egg wraps, so these can be made with gluten tortillas for others if kept separate.",
+      "household_notes": "Good freezer wrap option for the boys; use flour tortillas if cheaper.",
+      "prep_notes": "Freeze wrapped individually with salsa served on the side after reheating."
+    }
+  ]
+}
