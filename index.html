@@ -7,441 +7,678 @@
   <style>
     :root {
       --bg: #fff8ed;
+      --panel: #fffdf8;
       --card: #ffffff;
       --ink: #3f332b;
-      --muted: #75695f;
-      --accent: #8ea879;
-      --accent-dark: #49613e;
-      --accent-soft: #e5efd9;
-      --warm: #f7dfc6;
+      --muted: #766b61;
+      --faint: #a69b90;
+      --accent: #527346;
+      --accent-2: #8ea879;
+      --accent-soft: #e8f1dd;
+      --blue-soft: #e9f2f8;
+      --gold-soft: #fff0cf;
+      --purple-soft: #f1eafa;
       --border: #eadfce;
-      --shadow: rgba(63, 51, 43, 0.06);
+      --shadow: 0 18px 45px rgba(63, 51, 43, 0.08);
+      --radius: 24px;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(142, 168, 121, 0.16), transparent 32rem),
+        var(--bg);
       color: var(--ink);
       line-height: 1.5;
     }
 
-    header {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3rem 1rem 1.5rem;
+    button,
+    input,
+    select {
+      font: inherit;
     }
 
-    h1 {
-      margin: 0 0 0.5rem;
-      font-size: clamp(2rem, 5vw, 4rem);
-      letter-spacing: -0.05em;
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
     }
 
-    .intro {
-      max-width: 780px;
+    aside {
+      border-right: 1px solid var(--border);
+      background: rgba(255, 253, 248, 0.86);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+    }
+
+    .brand p,
+    .small {
       margin: 0;
       color: var(--muted);
-      font-size: 1.08rem;
+      font-size: 0.9rem;
     }
 
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1rem;
+    .primary-button,
+    .ghost-button,
+    .tab {
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
     }
 
-    .toolbar {
+    .primary-button {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.8rem 1rem;
+      font-weight: 750;
+      box-shadow: 0 12px 24px rgba(82, 115, 70, 0.18);
+    }
+
+    .ghost-button {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      padding: 0.7rem 0.9rem;
+      font-weight: 700;
+    }
+
+    nav {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(160px, auto);
-      gap: 0.75rem;
+      gap: 0.45rem;
+    }
+
+    .side-link {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 0.8rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+      font-weight: 650;
+    }
+
+    .side-link.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .tag,
+    .chip,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 0.24rem 0.58rem;
+      font-size: 0.78rem;
+      font-weight: 750;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .chip.blue { background: var(--blue-soft); color: #36627a; }
+    .chip.gold { background: var(--gold-soft); color: #8a5d10; }
+    .chip.purple { background: var(--purple-soft); color: #6f4a93; }
+    .pill { background: #f5f0e8; color: var(--muted); }
+
+    .content {
+      min-width: 0;
+      padding: 1rem 1.1rem 2rem;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 248, 237, 0.86);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 0 1rem;
       margin-bottom: 1rem;
     }
 
-    input,
-    select {
-      width: 100%;
+    .tabs {
+      display: inline-flex;
+      gap: 0.25rem;
+      background: var(--panel);
       border: 1px solid var(--border);
+      padding: 0.25rem;
       border-radius: 999px;
-      padding: 0.85rem 1rem;
-      font: inherit;
+      box-shadow: 0 8px 24px rgba(63, 51, 43, 0.04);
+    }
+
+    .tab {
+      background: transparent;
+      color: var(--muted);
+      padding: 0.72rem 1.2rem;
+      font-weight: 750;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .search {
+      min-width: 320px;
+      border: 1px solid var(--border);
       background: #fff;
       color: var(--ink);
+      border-radius: 999px;
+      padding: 0.78rem 1rem;
     }
 
-    .grid {
+    .workspace {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: minmax(0, 1fr) 340px;
       gap: 1rem;
+      align-items: start;
     }
 
-    article {
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin: 0 0 1rem;
+    }
+
+    .page-title h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      letter-spacing: -0.045em;
+    }
+
+    .page-title p {
+      margin: 0.2rem 0 0;
+      color: var(--muted);
+    }
+
+    .card,
+    .inspector,
+    .day-row,
+    .prep-group,
+    .meal-card,
+    .inventory-panel {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 1.1rem;
-      box-shadow: 0 12px 30px var(--shadow);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
 
-    article h2 {
-      margin: 0 0 0.45rem;
+    .inspector {
+      position: sticky;
+      top: 92px;
+      padding: 1rem;
+    }
+
+    .inspector h3 {
+      margin: 0 0 0.2rem;
       font-size: 1.25rem;
     }
 
-    .type {
-      display: inline-flex;
-      width: fit-content;
-      border-radius: 999px;
-      padding: 0.18rem 0.6rem;
-      background: var(--warm);
-      color: var(--ink);
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 0.65rem;
+    .inspector-tabs {
+      display: flex;
+      gap: 0.35rem;
+      margin: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .chips {
+    .inspector-tabs span {
+      padding: 0 0 0.55rem;
+      font-weight: 750;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .inspector-tabs span:first-child {
+      color: var(--accent);
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+      margin: 0.85rem 0;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.75rem;
+      text-align: center;
+      background: var(--panel);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.28rem;
+    }
+
+    .plan-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .day-row {
+      display: grid;
+      grid-template-columns: 84px minmax(180px, 1.1fr) minmax(240px, 1fr) minmax(150px, 0.7fr);
+      gap: 0.8rem;
+      align-items: center;
+      padding: 0.8rem;
+    }
+
+    .date-box {
+      align-self: stretch;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .date-box strong {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .dinner-block h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .mini-meals {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .mini-meal {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.34rem 0.5rem;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .mini-meal b {
+      color: var(--accent);
+      font-size: 0.76rem;
+    }
+
+    .note-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.7rem;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .prep-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 1rem;
+    }
+
+    .prep-list {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .prep-group {
+      overflow: hidden;
+    }
+
+    .prep-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0.95rem 1rem;
+    }
+
+    .prep-heading h3 {
+      margin: 0;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 0.7rem;
+      align-items: center;
+      padding: 0.82rem 1rem;
+      border-bottom: 1px solid #f1e9dd;
+      cursor: pointer;
+    }
+
+    .task:last-child { border-bottom: 0; }
+
+    .task input { width: 18px; height: 18px; }
+    .task strong { display: block; }
+    .task small { color: var(--muted); }
+
+    .priority-high { background: #fde3df; color: #a04736; }
+    .priority-medium { background: #fff0cf; color: #8a5d10; }
+    .priority-low { background: #e7f1df; color: #527346; }
+
+    .menu-controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
-      margin: 0.5rem 0 0.75rem;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
 
-    .chip {
-      display: inline-flex;
+    .filter-chip {
+      border: 1px solid var(--border);
+      background: #fff;
       border-radius: 999px;
-      padding: 0.25rem 0.6rem;
-      background: var(--accent-soft);
-      color: var(--accent-dark);
-      font-size: 0.85rem;
-    }
-
-    .section-title {
-      margin: 0.8rem 0 0.25rem;
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    p {
-      margin: 0 0 0.45rem;
+      padding: 0.55rem 0.8rem;
+      cursor: pointer;
+      font-weight: 750;
       color: var(--muted);
+    }
+
+    .filter-chip.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent-2);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 1rem;
+    }
+
+    .meal-card {
+      padding: 1rem;
+    }
+
+    .meal-card h3 {
+      margin: 0.45rem 0 0.35rem;
+    }
+
+    .meal-icon {
+      width: 100%;
+      min-height: 105px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 2.7rem;
+      background: linear-gradient(135deg, var(--accent-soft), #fff6e8);
     }
 
     details {
       margin-top: 0.8rem;
       border: 1px solid var(--border);
       border-radius: 16px;
-      background: #fffdf8;
+      background: var(--panel);
       overflow: hidden;
     }
 
     summary {
       cursor: pointer;
       padding: 0.7rem 0.85rem;
-      font-weight: 700;
-      color: var(--accent-dark);
+      font-weight: 800;
+      color: var(--accent);
     }
 
-    details ul {
+    details ul,
+    .clean-list {
       margin: 0;
-      padding: 0 1.1rem 0.9rem 2rem;
+      padding: 0 1rem 0.9rem 1.55rem;
       color: var(--muted);
     }
 
-    footer {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1rem 3rem;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .pantry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
     }
 
-    @media (max-width: 640px) {
-      .toolbar { grid-template-columns: 1fr; }
+    .inventory-panel {
+      padding: 1rem;
+    }
+
+    .inventory-panel h3 {
+      margin: 0 0 0.6rem;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1050px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      .workspace, .prep-layout { grid-template-columns: 1fr; }
+      .inspector { position: static; }
+      .day-row { grid-template-columns: 74px 1fr; }
+      .mini-meals, .note-card { grid-column: 2; }
+      .search { min-width: 0; width: 100%; }
+      .topbar { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Dinners</h1>
-    <p class="intro">A tiny practical meal library for cheap stretch meals, gluten-free dinner planning, easy lunches, breakfast backups, snacks, and flexible household swaps.</p>
-  </header>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <h1>🌿 Dinners</h1>
+        <p>Plan • Prep • Eat without spiraling</p>
+      </div>
 
-  <main>
-    <div class="toolbar" aria-label="Meal filters">
-      <input id="search" type="search" placeholder="Search meals, ingredients, or notes..." />
-      <select id="filter">
-        <option value="all">All meals</option>
-        <option value="dinner">Dinners</option>
-        <option value="lunch">Easy lunches</option>
-        <option value="breakfast">Easy breakfasts</option>
-        <option value="snack">Snacks</option>
-        <option value="angel">Angel-safe notes</option>
-        <option value="freezer">Freezer/prep friendly</option>
-        <option value="household">Household swaps</option>
-      </select>
-    </div>
+      <button class="primary-button" id="quickAdd">+ Add Meal</button>
 
-    <section id="mealGrid" class="grid" aria-live="polite"></section>
-  </main>
+      <nav aria-label="Main navigation">
+        <button class="side-link active" data-tab="plan">📅 This Week</button>
+        <button class="side-link" data-tab="prep">🍳 Prep</button>
+        <button class="side-link" data-tab="menu">📖 Menu Library</button>
+        <button class="side-link" data-tab="pantry">🧊 Pantry + Freezer</button>
+      </nav>
 
-  <footer>
-    <span id="updated"></span>
-  </footer>
+      <div>
+        <p class="small">Tags</p>
+        <div class="tags" style="margin-top: .55rem;">
+          <span class="tag">GF</span>
+          <span class="tag">Freezer</span>
+          <span class="tag">Fresh assembly</span>
+          <span class="tag">Other 3 only</span>
+        </div>
+      </div>
+
+      <div style="margin-top:auto">
+        <p class="small">Birthday week build</p>
+        <p class="small">Batch bases first, assemble meals fresh.</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="tabs" role="tablist" aria-label="Workspace tabs">
+          <button class="tab active" data-tab="plan">Plan</button>
+          <button class="tab" data-tab="prep">Prep</button>
+          <button class="tab" data-tab="menu">Menu</button>
+          <button class="tab" data-tab="pantry">Pantry</button>
+        </div>
+        <div class="search-row">
+          <input class="search" id="search" type="search" placeholder="Search meals, ingredients, notes..." />
+          <button class="ghost-button" id="clearSearch">Clear</button>
+        </div>
+      </div>
+
+      <section id="planView" class="view">
+        <div class="workspace">
+          <div>
+            <div class="page-header">
+              <div class="page-title">
+                <h2>Week Plan</h2>
+                <p>Rough plan for flexible dinners, easy breakfasts, lunches, and snacks.</p>
+              </div>
+              <button class="ghost-button">Auto-plan</button>
+            </div>
+            <div id="planList" class="plan-list"></div>
+          </div>
+          <section class="inspector" id="planInspector"></section>
+        </div>
+      </section>
+
+      <section id="prepView" class="view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>Prep Plan</h2>
+            <p>Tonight + tomorrow, ordered by what makes the week easiest.</p>
+          </div>
+          <div class="tags">
+            <span class="pill">Medium energy</span>
+            <span class="pill">Freezer-friendly</span>
+            <span class="pill">GF-aware</span>
+          </div>
+        </div>
+        <div class="prep-layout">
+          <div id="prepList" class="prep-list"></div>
+          <section class="inspector" id="prepInspector"></section>
+        </div>
+      </section>
+
+      <section id="menuView" class="view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>Menu Library</h2>
+            <p>Dinners, lunches, breakfasts, and snacks with ingredient dropdowns.</p>
+          </div>
+          <button class="primary-button">+ Add Recipe</button>
+        </div>
+        <div class="menu-controls" id="menuFilters"></div>
+        <div id="menuGrid" class="menu-grid"></div>
+      </section>
+
+      <section id="pantryView" class="view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>Pantry + Freezer</h2>
+            <p>What to pull from, prep, freeze, and keep accessible.</p>
+          </div>
+        </div>
+        <div id="pantryGrid" class="pantry-grid"></div>
+      </section>
+    </main>
+  </div>
 
   <script>
-    const grid = document.querySelector('#mealGrid');
-    const search = document.querySelector('#search');
-    const filter = document.querySelector('#filter');
-    const updated = document.querySelector('#updated');
-
-    const plannedMeals = [
-      {
-        id: 'pork-bean-chili',
-        type: 'dinner',
-        name: 'Pork and Bean Chili',
-        base: ['pork', 'beans', 'red sauce base', 'rice or potatoes'],
-        ingredients: ['shredded pork', 'cooked pinto/black/red beans', 'crushed tomatoes', 'tomato paste', 'salsa', 'bouillon', 'cumin', 'chili powder', 'rice or potatoes'],
-        angel_safe_notes: 'Mostly gluten-free as long as bouillon, salsa, beans, and seasonings are safe.',
-        household_notes: 'Serve over rice or potatoes so people can eat at different times.',
-        prep_notes: 'Freezes well in flat bags or containers.'
-      },
-      {
-        id: 'loaded-potato-bar',
-        type: 'dinner',
-        name: 'Loaded Potato Bar',
-        base: ['potatoes', 'chili or pork', 'cheese', 'salsa'],
-        ingredients: ['russet potatoes', 'pork or chili', 'cheese', 'bacon or turkey bacon', 'salsa', 'frozen vegetables'],
-        angel_safe_notes: 'Use gluten-free toppings and keep non-GF items away from the potato/topping station.',
-        household_notes: 'Very good assemble-your-own meal for staggered dinner times.',
-        prep_notes: 'Bake potatoes ahead or freeze par-cooked wedges/cubes for fresh assembly.'
-      },
-      {
-        id: 'gf-pizza-night',
-        type: 'dinner',
-        name: 'Gluten-Free Pizza Night',
-        base: ['GF crust', 'red sauce', 'pizza cheese', 'pepperoni'],
-        ingredients: ['gluten-free pizza dough', 'red sauce base', 'pizza cheese', 'pepperoni', 'bacon', 'onions and peppers', 'olives', 'Cabot cheddar'],
-        angel_safe_notes: 'Make sauce and crust gluten-free; watch cross-contact with regular bread/tortillas.',
-        household_notes: 'Cabot cheddar can add more real-cheese flavor for everyone who tolerates it.',
-        prep_notes: 'Par-bake crusts or freeze dough portions for easier pizza night.'
-      },
-      {
-        id: 'skillet-night',
-        type: 'dinner',
-        name: 'Skillet Night',
-        base: ['rice or potatoes', 'frozen veg', 'pork or bacon', 'cheese'],
-        ingredients: ['cooked rice or par-cooked potatoes', 'frozen mixed vegetables', 'shredded pork', 'bacon or turkey bacon', 'cheese', 'eggs if wanted'],
-        angel_safe_notes: 'Keep egg optional and use gluten-free seasonings.',
-        household_notes: 'Good use-the-random-bits meal with eggs added only for people who want them.',
-        prep_notes: 'Prep potatoes, rice, pork, and bacon ahead; assemble fresh in a skillet.'
-      },
-      {
-        id: 'soup-night',
-        type: 'dinner',
-        name: 'Soup Night',
-        base: ['broth', 'rice', 'mixed veg', 'pork'],
-        ingredients: ['pork broth or bouillon', 'rice', 'frozen mixed vegetables', 'shredded pork', 'beans or potatoes'],
-        angel_safe_notes: 'Use gluten-free bouillon and keep rice separate if texture matters.',
-        household_notes: 'Simple mild soup base that can be dressed up per bowl.',
-        prep_notes: 'Freeze soup base without rice for best texture.'
-      },
-      {
-        id: 'pasta-night',
-        type: 'dinner',
-        name: 'Pasta Night',
-        base: ['GF pasta', 'regular pasta if needed', 'red sauce', 'breadsticks'],
-        ingredients: ['gluten-free pasta', 'regular pasta for others if needed', 'red sauce base', 'garlic breadsticks', 'cheese', 'optional pork or vegetables'],
-        angel_safe_notes: 'Cook GF pasta separately with clean tools and a separate strainer.',
-        household_notes: 'Regular pasta can be used for the others if needed.',
-        prep_notes: 'Make sauce ahead; cook pasta fresh.'
-      },
-      {
-        id: 'corn-tortilla-pizza-quesadillas',
-        type: 'lunch',
-        name: 'Corn Tortilla Pizza Quesadillas',
-        base: ['corn tortillas', 'sauce', 'cheese', 'pepperoni/bacon'],
-        ingredients: ['corn tortillas', 'red sauce or pizza sauce', 'shredded cheese', 'pepperoni', 'bacon or turkey bacon'],
-        angel_safe_notes: 'Use corn tortillas and gluten-free toppings.',
-        household_notes: 'Easy lunch pizza option without making a full crust.',
-        prep_notes: 'Keep as a small kit and pan-toast fresh.'
-      },
-      {
-        id: 'bean-cheese-tacos',
-        type: 'lunch',
-        name: 'Bean and Cheese Tacos',
-        base: ['corn tortillas', 'beans', 'cheese', 'salsa'],
-        ingredients: ['corn tortillas', 'cooked beans', 'cheese', 'salsa', 'cumin or taco seasoning'],
-        angel_safe_notes: 'Use corn tortillas and safe seasonings.',
-        household_notes: 'Can be kept mild and assembled per person.',
-        prep_notes: 'Cook beans ahead; assemble fresh so tortillas stay better.'
-      },
-      {
-        id: 'tuna-rice-bowl',
-        type: 'lunch',
-        name: 'Tuna Rice Bowl',
-        base: ['tuna', 'rice', 'veg', 'bouillon/salsa'],
-        ingredients: ['tuna', 'cooked rice', 'frozen or cooked vegetables', 'bouillon', 'salsa'],
-        angel_safe_notes: 'Use gluten-free bouillon and keep tuna separate until serving.',
-        household_notes: 'Crimson does not like tuna, so add tuna after his portion is pulled.',
-        prep_notes: 'Prep rice and veg; open tuna fresh.'
-      },
-      {
-        id: 'chickpea-lunch-bowl',
-        type: 'lunch',
-        name: 'Chickpea Snack/Lunch Bowl',
-        base: ['chickpeas', 'rice', 'veg', 'seasonings'],
-        ingredients: ['chickpeas', 'cooked rice', 'frozen or cooked vegetables', 'garlic powder', 'onion powder', 'cumin or Italian seasoning', 'salsa or red sauce'],
-        angel_safe_notes: 'Naturally gluten-free if chickpeas and seasonings are safe.',
-        household_notes: 'Can go taco-style, garlic-bouillon style, or pizza-ish.',
-        prep_notes: 'Store chickpeas plain; pan-crisp fresh if you have energy.'
-      },
-      {
-        id: 'tuna-pasta',
-        type: 'lunch',
-        name: 'Tuna Pasta',
-        base: ['pasta', 'tuna', 'veg', 'sauce'],
-        ingredients: ['gluten-free pasta for Angel', 'regular pasta for others if needed', 'tuna', 'vegetables', 'red sauce or cheesy bouillon sauce'],
-        angel_safe_notes: 'Cook GF pasta separately and add tuna after Crimson’s portion is scooped.',
-        household_notes: 'Crimson can take the no-tuna portion first.',
-        prep_notes: 'Cook pasta fresh; prep sauce/veg ahead.'
-      },
-      {
-        id: 'pb-toast-sandwiches',
-        type: 'lunch',
-        name: 'PB Toast/Sandwiches for Others',
-        base: ['bread', 'peanut butter'],
-        ingredients: ['regular bread', 'peanut butter'],
-        angel_safe_notes: 'Not gluten-free if made with regular bread; keep separate from GF prep.',
-        household_notes: 'Fast emergency food for the non-GF folks.',
-        prep_notes: 'Can pre-make a few sandwiches and fridge or freeze individually.'
-      },
-      {
-        id: 'oatmeal-brown-sugar',
-        type: 'breakfast',
-        name: 'Oatmeal with Brown Sugar',
-        base: ['oats', 'brown sugar', 'almond milk'],
-        ingredients: ['gluten-free oats', 'brown sugar', 'almond milk', 'peanut butter or pumpkin if wanted'],
-        angel_safe_notes: 'Use certified gluten-free oats.',
-        household_notes: 'Easy breakfast station for anyone awake first.',
-        prep_notes: 'Portion dry oats and brown sugar into jars or bags.'
-      },
-      {
-        id: 'breakfast-potatoes-skillet',
-        type: 'breakfast',
-        name: 'Breakfast Potatoes/Skillet',
-        base: ['potatoes', 'bacon/turkey bacon', 'veg', 'optional egg'],
-        ingredients: ['par-cooked potato cubes or wedges', 'bacon or turkey bacon', 'frozen vegetables', 'cheese', 'eggs if wanted'],
-        angel_safe_notes: 'Keep eggs optional for Angel and use gluten-free seasonings.',
-        household_notes: 'Best fresh-assembled instead of frozen as a finished bowl.',
-        prep_notes: 'Par-cook potatoes, dry well, tray-freeze, then cook fresh from frozen.'
-      },
-      {
-        id: 'egg-wraps',
-        type: 'breakfast',
-        name: 'Egg Wraps for the Other 3',
-        base: ['eggs', 'cheese', 'bacon/turkey bacon', 'flour tortilla'],
-        ingredients: ['eggs', 'cheese', 'bacon or turkey bacon', 'flour tortillas'],
-        angel_safe_notes: 'Not Angel’s breakfast and not gluten-free if flour tortillas are used.',
-        household_notes: 'Good grab-and-go breakfast for the other 3 adults.',
-        prep_notes: 'Wrap individually; fridge 3–4 days or freeze extras.'
-      },
-      {
-        id: 'rice-bowl-breakfast',
-        type: 'breakfast',
-        name: 'Leftover Rice Bowl with Pork/Beans',
-        base: ['rice', 'pork', 'beans', 'salsa'],
-        ingredients: ['cooked rice', 'shredded pork', 'cooked beans', 'salsa', 'cheese if wanted'],
-        angel_safe_notes: 'Good gluten-free option when breakfast food sounds bad.',
-        household_notes: 'Works as breakfast, lunch, or emergency dinner.',
-        prep_notes: 'Portion rice, pork, and beans separately for flexible reheating.'
-      },
-      {
-        id: 'pb-tortillas-bread',
-        type: 'snack',
-        name: 'Peanut Butter Tortillas or PB Bread',
-        base: ['peanut butter', 'tortillas or bread'],
-        ingredients: ['peanut butter', 'corn tortillas for GF option', 'regular bread or flour tortillas for others'],
-        angel_safe_notes: 'Use corn tortillas for a gluten-free snack option.',
-        household_notes: 'Regular bread/tortillas are for the non-GF folks.',
-        prep_notes: 'Keep peanut butter easy-access and separate from regular bread crumbs.'
-      },
-      {
-        id: 'cheese-corn-tortillas',
-        type: 'snack',
-        name: 'Cheese + Corn Tortillas',
-        base: ['cheese', 'corn tortillas'],
-        ingredients: ['corn tortillas', 'cheese', 'salsa if wanted'],
-        angel_safe_notes: 'Gluten-free if tortillas and toppings are safe.',
-        household_notes: 'Fast tiny quesadilla or roll-up snack.',
-        prep_notes: 'Assemble fresh so tortillas do not get tough or soggy.'
-      },
-      {
-        id: 'popsicles-ice-pops',
-        type: 'snack',
-        name: 'Popsicles / Ice Pops',
-        base: ['popsicles', 'ice pops'],
-        ingredients: ['freezer pops', 'ice pops'],
-        angel_safe_notes: 'Check labels if needed for gluten/dairy concerns.',
-        household_notes: 'Easy no-prep freezer snack.',
-        prep_notes: 'Put away first when groceries arrive so they do not soften.'
-      },
-      {
-        id: 'snacky-oats',
-        type: 'snack',
-        name: 'Sweet/Snacky Oats',
-        base: ['oats', 'brown sugar', 'peanut butter'],
-        ingredients: ['gluten-free oats', 'brown sugar', 'almond milk', 'peanut butter', 'pumpkin or cinnamon if wanted'],
-        angel_safe_notes: 'Use certified gluten-free oats.',
-        household_notes: 'Can be breakfast, snack, or dessert-ish backup.',
-        prep_notes: 'Pre-portion dry oats and sweetener if helpful.'
-      },
-      {
-        id: 'crisped-chickpeas',
-        type: 'snack',
-        name: 'Roasted or Pan-Crisped Chickpeas',
-        base: ['chickpeas', 'seasonings'],
-        ingredients: ['chickpeas', 'oil', 'salt', 'garlic powder', 'onion powder', 'cumin or paprika'],
-        angel_safe_notes: 'Naturally gluten-free if chickpeas and seasonings are safe.',
-        household_notes: 'Good crunchy snack when there is enough energy to crisp them.',
-        prep_notes: 'Drain and dry well; season after crisping for best texture.'
-      },
-      {
-        id: 'pepperoni-cheese',
-        type: 'snack',
-        name: 'Pepperoni + Cheese',
-        base: ['pepperoni', 'cheese'],
-        ingredients: ['pepperoni', 'cheese'],
-        angel_safe_notes: 'Check pepperoni label and use tolerated cheese.',
-        household_notes: 'Good fast protein snack.',
-        prep_notes: 'Portion into small containers if helpful.'
-      },
-      {
-        id: 'mac-cheese-backup',
-        type: 'snack',
-        name: 'Mac and Cheese Backup for the Other 3',
-        base: ['boxed mac and cheese'],
-        ingredients: ['boxed mac and cheese', 'bacon or turkey bacon', 'frozen veg if wanted'],
-        angel_safe_notes: 'Not gluten-free; keep separate from Angel’s prep tools.',
-        household_notes: 'Quick meal/snack for the other 3.',
-        prep_notes: 'Store boxes together as an emergency backup.'
-      }
+    const meals = [
+      { id:'chili', type:'dinner', icon:'🍲', name:'Pork and Bean Chili', tags:['GF','freezer','pork'], base:['pork','beans','red sauce base','rice or potatoes'], ingredients:['shredded pork','cooked pinto/black/red beans','crushed tomatoes','tomato paste','salsa','bouillon','cumin','chili powder','rice or potatoes'], angel:'Mostly gluten-free if bouillon, salsa, beans, and seasonings are safe.', household:'Serve over rice or potatoes so people can eat at different times.', prep:'Freezes well in flat bags or containers.' },
+      { id:'potato-bar', type:'dinner', icon:'🥔', name:'Loaded Potato Bar', tags:['GF','fresh assembly'], base:['potatoes','chili or pork','cheese','salsa'], ingredients:['russet potatoes','pork or chili','cheese','bacon or turkey bacon','salsa','frozen vegetables'], angel:'Use GF toppings and keep non-GF items away from the station.', household:'Everyone can assemble their own.', prep:'Bake potatoes ahead or freeze par-cooked wedges/cubes.' },
+      { id:'pizza-night', type:'dinner', icon:'🍕', name:'Gluten-Free Pizza Night', tags:['GF','fresh assembly'], base:['GF crust','red sauce','pizza cheese','pepperoni'], ingredients:['GF pizza dough','red sauce base','pizza cheese','pepperoni','bacon','onions and peppers','olives','Cabot cheddar'], angel:'Make sauce and crust gluten-free; watch cross-contact.', household:'Cabot cheddar adds real-cheese flavor if tolerated.', prep:'Par-bake crusts or freeze dough portions.' },
+      { id:'skillet', type:'dinner', icon:'🍳', name:'Skillet Night', tags:['GF','fresh assembly'], base:['rice or potatoes','frozen veg','pork or bacon','cheese'], ingredients:['cooked rice or par-cooked potatoes','frozen mixed vegetables','shredded pork','bacon or turkey bacon','cheese','eggs if wanted'], angel:'Keep egg optional and use gluten-free seasonings.', household:'Good use-the-random-bits meal.', prep:'Prep potatoes, rice, pork, and bacon ahead; assemble fresh.' },
+      { id:'soup', type:'dinner', icon:'🥣', name:'Soup Night', tags:['GF','freezer'], base:['broth','rice','mixed veg','pork'], ingredients:['pork broth or bouillon','rice','frozen mixed vegetables','shredded pork','beans or potatoes'], angel:'Use gluten-free bouillon and keep rice separate if texture matters.', household:'Simple mild soup base that can be dressed up per bowl.', prep:'Freeze soup base without rice for best texture.' },
+      { id:'pasta', type:'dinner', icon:'🍝', name:'Pasta Night', tags:['GF option','fresh'], base:['GF pasta','red sauce','breadsticks'], ingredients:['GF pasta','regular pasta for others if needed','red sauce base','garlic breadsticks','cheese','optional pork or vegetables'], angel:'Cook GF pasta separately with clean tools and a separate strainer.', household:'Regular pasta can be used for others if needed.', prep:'Make sauce ahead; cook pasta fresh.' },
+      { id:'pizza-quesadilla', type:'lunch', icon:'🌮', name:'Corn Tortilla Pizza Quesadillas', tags:['GF','lunch'], base:['corn tortillas','sauce','cheese','pepperoni/bacon'], ingredients:['corn tortillas','red sauce or pizza sauce','shredded cheese','pepperoni','bacon or turkey bacon'], angel:'Use corn tortillas and gluten-free toppings.', household:'Easy lunch pizza without making a full crust.', prep:'Keep as a kit and pan-toast fresh.' },
+      { id:'bean-tacos', type:'lunch', icon:'🫘', name:'Bean and Cheese Tacos', tags:['GF','lunch'], base:['corn tortillas','beans','cheese','salsa'], ingredients:['corn tortillas','cooked beans','cheese','salsa','cumin or taco seasoning'], angel:'Use corn tortillas and safe seasonings.', household:'Keep mild and assemble per person.', prep:'Cook beans ahead; assemble fresh.' },
+      { id:'tuna-rice', type:'lunch', icon:'🍚', name:'Tuna Rice Bowl', tags:['GF','lunch'], base:['tuna','rice','veg','bouillon/salsa'], ingredients:['tuna','cooked rice','frozen or cooked vegetables','bouillon','salsa'], angel:'Use gluten-free bouillon and keep tuna separate until serving.', household:'Crimson does not like tuna, so add tuna after his portion is pulled.', prep:'Prep rice and veg; open tuna fresh.' },
+      { id:'chickpea-bowl', type:'lunch', icon:'🥗', name:'Chickpea Snack/Lunch Bowl', tags:['GF','lunch'], base:['chickpeas','rice','veg','seasonings'], ingredients:['chickpeas','cooked rice','frozen or cooked vegetables','garlic powder','onion powder','cumin or Italian seasoning','salsa or red sauce'], angel:'Naturally gluten-free if chickpeas and seasonings are safe.', household:'Can go taco-style, garlic-bouillon style, or pizza-ish.', prep:'Store chickpeas plain; pan-crisp fresh if you have energy.' },
+      { id:'tuna-pasta', type:'lunch', icon:'🐟', name:'Tuna Pasta', tags:['GF option','Crimson no tuna'], base:['pasta','tuna','veg','sauce'], ingredients:['GF pasta for Angel','regular pasta if needed','tuna','vegetables','red sauce or cheesy bouillon sauce'], angel:'Cook GF pasta separately and add tuna after Crimson’s portion is scooped.', household:'Crimson can take the no-tuna portion first.', prep:'Cook pasta fresh; prep sauce/veg ahead.' },
+      { id:'pb-sandwiches', type:'lunch', icon:'🥜', name:'PB Toast/Sandwiches for Others', tags:['other 3 only'], base:['bread','peanut butter'], ingredients:['regular bread','peanut butter'], angel:'Not gluten-free if made with regular bread; keep separate.', household:'Fast emergency food for the non-GF folks.', prep:'Can pre-make a few sandwiches and fridge or freeze.' },
+      { id:'oatmeal', type:'breakfast', icon:'🥣', name:'Oatmeal with Brown Sugar', tags:['GF','breakfast'], base:['oats','brown sugar','almond milk'], ingredients:['certified gluten-free oats','brown sugar','almond milk','peanut butter or pumpkin if wanted'], angel:'Use certified gluten-free oats.', household:'Easy breakfast station for anyone awake first.', prep:'Portion dry oats and brown sugar into jars or bags.' },
+      { id:'breakfast-potatoes', type:'breakfast', icon:'🥔', name:'Breakfast Potatoes/Skillet', tags:['GF','fresh assembly'], base:['potatoes','bacon/turkey bacon','veg','optional egg'], ingredients:['par-cooked potato cubes or wedges','bacon or turkey bacon','frozen vegetables','cheese','eggs if wanted'], angel:'Keep eggs optional for Angel and use gluten-free seasonings.', household:'Best fresh-assembled instead of frozen as a finished bowl.', prep:'Par-cook potatoes, dry well, tray-freeze, then cook fresh from frozen.' },
+      { id:'egg-wraps', type:'breakfast', icon:'🌯', name:'Egg Wraps for the Other 3', tags:['other 3 only','freezer'], base:['eggs','cheese','bacon/turkey bacon','flour tortilla'], ingredients:['eggs','cheese','bacon or turkey bacon','flour tortillas'], angel:'Not Angel’s breakfast and not gluten-free if flour tortillas are used.', household:'Good grab-and-go breakfast for the other 3 adults.', prep:'Wrap individually; fridge 3–4 days or freeze extras.' },
+      { id:'rice-breakfast', type:'breakfast', icon:'🍚', name:'Leftover Rice Bowl with Pork/Beans', tags:['GF','breakfast'], base:['rice','pork','beans','salsa'], ingredients:['cooked rice','shredded pork','cooked beans','salsa','cheese if wanted'], angel:'Good gluten-free option when breakfast food sounds bad.', household:'Works as breakfast, lunch, or emergency dinner.', prep:'Portion rice, pork, and beans separately.' },
+      { id:'pb-tortillas', type:'snack', icon:'🥜', name:'Peanut Butter Tortillas or PB Bread', tags:['GF option','snack'], base:['peanut butter','tortillas or bread'], ingredients:['peanut butter','corn tortillas for GF option','regular bread or flour tortillas for others'], angel:'Use corn tortillas for a gluten-free snack option.', household:'Regular bread/tortillas are for the non-GF folks.', prep:'Keep PB easy-access and separate from regular bread crumbs.' },
+      { id:'cheese-tortillas', type:'snack', icon:'🧀', name:'Cheese + Corn Tortillas', tags:['GF','snack'], base:['cheese','corn tortillas'], ingredients:['corn tortillas','cheese','salsa if wanted'], angel:'Gluten-free if tortillas and toppings are safe.', household:'Fast tiny quesadilla or roll-up snack.', prep:'Assemble fresh.' },
+      { id:'popsicles', type:'snack', icon:'🧊', name:'Popsicles / Ice Pops', tags:['snack'], base:['popsicles','ice pops'], ingredients:['freezer pops','ice pops'], angel:'Check labels if needed for gluten/dairy concerns.', household:'Easy no-prep freezer snack.', prep:'Put away first when groceries arrive.' },
+      { id:'snacky-oats', type:'snack', icon:'🥣', name:'Sweet/Snacky Oats', tags:['GF','snack'], base:['oats','brown sugar','peanut butter'], ingredients:['certified GF oats','brown sugar','almond milk','peanut butter','pumpkin or cinnamon if wanted'], angel:'Use certified gluten-free oats.', household:'Can be breakfast, snack, or dessert-ish backup.', prep:'Pre-portion dry oats and sweetener.' },
+      { id:'crisped-chickpeas', type:'snack', icon:'🫘', name:'Roasted or Pan-Crisped Chickpeas', tags:['GF','snack'], base:['chickpeas','seasonings'], ingredients:['chickpeas','oil','salt','garlic powder','onion powder','cumin or paprika'], angel:'Naturally gluten-free if chickpeas and seasonings are safe.', household:'Good crunchy snack if there is energy to crisp them.', prep:'Drain and dry well; season after crisping.' },
+      { id:'pepperoni-cheese', type:'snack', icon:'🧀', name:'Pepperoni + Cheese', tags:['snack'], base:['pepperoni','cheese'], ingredients:['pepperoni','cheese'], angel:'Check pepperoni label and use tolerated cheese.', household:'Good fast protein snack.', prep:'Portion into small containers if helpful.' },
+      { id:'mac-backup', type:'snack', icon:'🧀', name:'Mac and Cheese Backup for the Other 3', tags:['other 3 only'], base:['boxed mac and cheese'], ingredients:['boxed mac and cheese','bacon or turkey bacon','frozen veg if wanted'], angel:'Not gluten-free; keep separate from Angel’s prep tools.', household:'Quick meal/snack for the other 3.', prep:'Store boxes together as an emergency backup.' }
     ];
 
-    let meals = plannedMeals;
+    const weekPlan = [
+      { day:'Mon', date:'14', dinner:'chili', breakfast:'oatmeal', lunch:'bean-tacos', snack:'cheese-tortillas', note:'Good chili/potato bowl day. People can eat separately.' },
+      { day:'Tue', date:'15', dinner:'potato-bar', breakfast:'breakfast-potatoes', lunch:'pizza-quesadilla', snack:'popsicles', note:'Use pork/chili/cheese toppings and frozen veg.' },
+      { day:'Wed', date:'16', dinner:'pizza-night', breakfast:'egg-wraps', lunch:'chickpea-bowl', snack:'pepperoni-cheese', note:'Use par-baked GF crust and pizza sauce base.' },
+      { day:'Thu', date:'17', dinner:'skillet', breakfast:'rice-breakfast', lunch:'tuna-rice', snack:'snacky-oats', note:'Fresh assembly skillet with potatoes or rice.' },
+      { day:'Fri', date:'18', dinner:'soup', breakfast:'oatmeal', lunch:'tuna-pasta', snack:'crisped-chickpeas', note:'Soup base freezes best without rice.' },
+      { day:'Sat', date:'19', dinner:'pasta', breakfast:'breakfast-potatoes', lunch:'pb-sandwiches', snack:'pb-tortillas', note:'Cook GF pasta separately and keep breadsticks GF.' }
+    ];
 
-    function normalizeDinner(dinner) {
-      return {
-        ...dinner,
-        type: 'dinner',
-        ingredients: dinner.ingredients || [
-          ...(dinner.base || []),
-          ...(dinner.optional_proteins || [])
-        ]
-      };
-    }
+    const prepTasks = [
+      { group:'Bake', name:'Angel food cake', time:'60m', priority:'high', linked:['Birthday cake'], ingredients:['egg whites','sugar','GF flour/cornstarch','cream of tartar','vanilla'], notes:'Do first with grease-free bowl and beaters.' },
+      { group:'Bake', name:'GF pizza dough / crusts', time:'45m', priority:'medium', linked:['Pizza night','pizza quesadillas'], ingredients:['GF flour','yeast','warm water','oil','sugar','salt'], notes:'Par-bake crusts for easiest dinner mode.' },
+      { group:'Bake', name:'Garlic breadsticks', time:'35m', priority:'medium', linked:['Pasta night'], ingredients:['GF flour','yeast','eggs','butter/oil','garlic powder'], notes:'Bake or par-bake; freeze extras.' },
+      { group:'Bake', name:'Waffles, scones, PB cookies', time:'90m', priority:'low', linked:['Breakfasts','snacks'], ingredients:['oat flour','blueberries/lemon','peanut butter','eggs','brown sugar'], notes:'Cool fully before freezing.' },
+      { group:'Cook', name:'Pork shoulder', time:'hands-off', priority:'high', linked:['Chili','potato bar','skillet','soup'], ingredients:['pork shoulder','salt','pepper','garlic powder','bouillon/water'], notes:'Cook until shreddable; save juices if tasty.' },
+      { group:'Cook', name:'Soak and cook beans', time:'90m', priority:'high', linked:['Chili','tacos','bowls','soup'], ingredients:['black beans','pinto beans','red beans','salt','seasonings'], notes:'Hard-boil kidney-style red beans first.' },
+      { group:'Cook', name:'Big batch rice', time:'30m', priority:'medium', linked:['Bowls','soup','breakfast rice'], ingredients:['white rice','water/broth','salt'], notes:'Cool quickly in shallow containers.' },
+      { group:'Cook', name:'Red sauce base', time:'25m', priority:'medium', linked:['Pizza','pasta','chili','soup'], ingredients:['crushed tomatoes','tomato paste','onion/pepper blend','Italian seasoning'], notes:'Split into pizza/pasta/chili portions.' },
+      { group:'Cook', name:'Bacon and turkey bacon', time:'25m', priority:'medium', linked:['Egg wraps','skillets','pizza','potatoes'], ingredients:['bacon','turkey bacon'], notes:'Cook once and chop for toppings.' },
+      { group:'Freeze', name:'Par-cook potato cubes/wedges', time:'30m', priority:'high', linked:['Breakfast skillet','loaded potato bar','skillet night'], ingredients:['russet potatoes','oil','salt','garlic powder'], notes:'Par-cook, dry very well, tray-freeze, then bag.' },
+      { group:'Portion', name:'Shred and portion pork', time:'20m', priority:'high', linked:['Most dinners'], ingredients:['cooked pork','freezer bags/containers'], notes:'Keep some plain; freeze extra portions.' },
+      { group:'Portion', name:'Portion beans, rice, sauce', time:'30m', priority:'medium', linked:['Bowls','chili','soup'], ingredients:['cooked beans','rice','red sauce base'], notes:'Keep 2–3 days in fridge, freeze the rest.' },
+      { group:'Portion', name:'Prep egg wraps for other 3', time:'25m', priority:'medium', linked:['Other 3 breakfasts'], ingredients:['eggs','cheese','bacon/turkey bacon','flour tortillas'], notes:'Label not gluten-free.' },
+      { group:'Portion', name:'Build lunch/snack zones', time:'20m', priority:'low', linked:['Lunches','snacks'], ingredients:['corn tortillas','cheese','salsa','tuna','PB','pepperoni'], notes:'Keep GF and non-GF areas separate.' }
+    ];
+
+    const pantry = [
+      { title:'Freezer', icon:'🧊', items:['pork portions','beans','rice portions','par-cooked potato cubes','waffles','scones','PB cookie dough','pizza crusts'] },
+      { title:'Fridge', icon:'🧺', items:['2–3 days rice','2–3 days pork','cooked bacon/turkey bacon','red sauce base','egg wraps for other 3','cheese','salsa'] },
+      { title:'Pantry', icon:'🥫', items:['rice','GF oats','GF flour','peanut butter','tuna','bouillon','tomato paste','corn tortillas'] },
+      { title:'Fresh assembly', icon:'🍳', items:['breakfast skillets','loaded potato bar','pizza quesadillas','bean tacos','pasta night','egg add-ins'] }
+    ];
+
+    const byId = Object.fromEntries(meals.map(meal => [meal.id, meal]));
+    const state = { tab:'plan', filter:'all', selectedMeal: meals[0], selectedTask: prepTasks[0] };
+
+    const views = {
+      plan: document.querySelector('#planView'),
+      prep: document.querySelector('#prepView'),
+      menu: document.querySelector('#menuView'),
+      pantry: document.querySelector('#pantryView')
+    };
+
+    const search = document.querySelector('#search');
 
     function escapeHtml(value) {
       return String(value || '')
@@ -452,80 +689,124 @@
         .replaceAll("'", '&#039;');
     }
 
-    function textForMeal(meal) {
-      return [
-        meal.type,
-        meal.name,
-        ...(meal.base || []),
-        ...(meal.ingredients || []),
-        ...(meal.optional_proteins || []),
-        meal.angel_safe_notes,
-        meal.household_notes,
-        meal.prep_notes
-      ].join(' ').toLowerCase();
+    function setTab(tab) {
+      state.tab = tab;
+      Object.entries(views).forEach(([key, el]) => el.classList.toggle('hidden', key !== tab));
+      document.querySelectorAll('[data-tab]').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      render();
     }
 
-    function matchesFilter(meal) {
-      if (['dinner', 'lunch', 'breakfast', 'snack'].includes(filter.value)) return meal.type === filter.value;
-      if (filter.value === 'angel') return Boolean(meal.angel_safe_notes);
-      if (filter.value === 'freezer') return /freeze|freezer|portion|batch|prep|par-cook|par-bake|fridge/i.test(meal.prep_notes || '');
-      if (filter.value === 'household') return Boolean(meal.household_notes);
-      return true;
+    function mealText(meal) {
+      return [meal.type, meal.name, ...(meal.tags || []), ...(meal.base || []), ...(meal.ingredients || []), meal.angel, meal.household, meal.prep].join(' ').toLowerCase();
+    }
+
+    function renderPlan() {
+      const term = search.value.trim().toLowerCase();
+      const rows = weekPlan.filter(day => !term || [day.day, day.note, ...['dinner','breakfast','lunch','snack'].map(k => byId[day[k]]?.name || '')].join(' ').toLowerCase().includes(term));
+      document.querySelector('#planList').innerHTML = rows.map(day => {
+        const dinner = byId[day.dinner];
+        return `<article class="day-row" data-meal="${dinner.id}">
+          <div class="date-box"><div>${day.day}<strong>${day.date}</strong></div></div>
+          <div class="dinner-block">
+            <span class="pill">Dinner</span>
+            <h3>${escapeHtml(dinner.icon)} ${escapeHtml(dinner.name)}</h3>
+            <div class="tags" style="margin-top:.45rem">${dinner.tags.slice(0,3).map(t => `<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+          <div class="mini-meals">
+            <div class="mini-meal"><b>B</b> ${escapeHtml(byId[day.breakfast].name)}</div>
+            <div class="mini-meal"><b>L</b> ${escapeHtml(byId[day.lunch].name)}</div>
+            <div class="mini-meal"><b>S</b> ${escapeHtml(byId[day.snack].name)}</div>
+          </div>
+          <div class="note-card">${escapeHtml(day.note)}</div>
+        </article>`;
+      }).join('') || '<p>No planned meals match that search yet.</p>';
+
+      document.querySelectorAll('.day-row').forEach(row => row.addEventListener('click', () => {
+        state.selectedMeal = byId[row.dataset.meal];
+        renderInspector();
+      }));
+      renderInspector();
+    }
+
+    function renderInspector() {
+      const meal = state.selectedMeal || meals[0];
+      document.querySelector('#planInspector').innerHTML = `<h3>${escapeHtml(meal.icon)} ${escapeHtml(meal.name)}</h3>
+        <p class="small">${escapeHtml(meal.type)} • ${escapeHtml((meal.tags || []).join(' • '))}</p>
+        <div class="inspector-tabs"><span>Overview</span><span>Ingredients</span><span>Prep</span><span>Notes</span></div>
+        <div class="metric-grid"><div class="metric"><strong>${meal.ingredients.length}</strong><span class="small">ingredients</span></div><div class="metric"><strong>${meal.base.length}</strong><span class="small">base parts</span></div><div class="metric"><strong>${meal.tags.length}</strong><span class="small">tags</span></div></div>
+        <p class="section-title">Angel-safe notes</p><p>${escapeHtml(meal.angel)}</p>
+        <p class="section-title">Household notes</p><p>${escapeHtml(meal.household)}</p>
+        <details open><summary>Ingredients / pull from</summary><ul>${meal.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></details>
+        <details><summary>Prep notes</summary><ul><li>${escapeHtml(meal.prep)}</li></ul></details>`;
+    }
+
+    function renderPrep() {
+      const groups = [...new Set(prepTasks.map(task => task.group))];
+      document.querySelector('#prepList').innerHTML = groups.map(group => {
+        const tasks = prepTasks.filter(task => task.group === group);
+        return `<section class="prep-group"><div class="prep-heading"><div><h3>${escapeHtml(group)}</h3><p class="small">${tasks.length} tasks</p></div><span class="pill">${tasks.map(t => t.time).join(' + ')}</span></div>
+          ${tasks.map(task => `<div class="task" data-task="${escapeHtml(task.name)}"><input type="checkbox" /><div><strong>${escapeHtml(task.name)}</strong><small>${escapeHtml(task.linked.join(', '))}</small></div><span class="pill">${escapeHtml(task.time)}</span><span class="chip priority-${escapeHtml(task.priority)}">${escapeHtml(task.priority)}</span></div>`).join('')}
+        </section>`;
+      }).join('');
+      document.querySelectorAll('.task').forEach(row => row.addEventListener('click', (event) => {
+        if (event.target.tagName === 'INPUT') return;
+        state.selectedTask = prepTasks.find(task => task.name === row.dataset.task) || prepTasks[0];
+        renderPrepInspector();
+      }));
+      renderPrepInspector();
+    }
+
+    function renderPrepInspector() {
+      const task = state.selectedTask || prepTasks[0];
+      document.querySelector('#prepInspector').innerHTML = `<h3>${escapeHtml(task.name)}</h3><p class="small">${escapeHtml(task.group)} • ${escapeHtml(task.time)} • ${escapeHtml(task.priority)} priority</p>
+        <div class="inspector-tabs"><span>Ingredients</span><span>Notes</span><span>Meals</span></div>
+        <details open><summary>Ingredients / pull from</summary><ul>${task.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></details>
+        <p class="section-title">Linked meals</p><p>${escapeHtml(task.linked.join(', '))}</p>
+        <p class="section-title">Prep note</p><p>${escapeHtml(task.notes)}</p>
+        <div class="note-card" style="margin-top:1rem">Tip: prep the pieces, then assemble fresh when texture matters.</div>`;
+    }
+
+    function renderMenu() {
+      const filters = ['all','dinner','lunch','breakfast','snack','GF','freezer','other 3 only','fresh assembly'];
+      document.querySelector('#menuFilters').innerHTML = filters.map(filter => `<button class="filter-chip ${state.filter === filter ? 'active' : ''}" data-filter="${filter}">${filter}</button>`).join('');
+      document.querySelectorAll('.filter-chip').forEach(btn => btn.addEventListener('click', () => { state.filter = btn.dataset.filter; renderMenu(); }));
+
+      const term = search.value.trim().toLowerCase();
+      const visible = meals.filter(meal => {
+        const matchesSearch = !term || mealText(meal).includes(term);
+        const matchesFilter = state.filter === 'all' || meal.type === state.filter || meal.tags.includes(state.filter);
+        return matchesSearch && matchesFilter;
+      });
+
+      document.querySelector('#menuGrid').innerHTML = visible.map(meal => `<article class="meal-card" data-meal="${meal.id}">
+        <div class="meal-icon">${escapeHtml(meal.icon)}</div>
+        <div class="tags" style="margin-top:.7rem">${meal.tags.slice(0,3).map(tag => `<span class="chip">${escapeHtml(tag)}</span>`).join('')}</div>
+        <h3>${escapeHtml(meal.name)}</h3>
+        <p>${escapeHtml(meal.prep)}</p>
+        <details><summary>Ingredients (${meal.ingredients.length})</summary><ul>${meal.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></details>
+      </article>`).join('') || '<p>No meals match that search/filter yet.</p>';
+      document.querySelectorAll('.meal-card').forEach(card => card.addEventListener('click', (event) => {
+        if (event.target.closest('details')) return;
+        state.selectedMeal = byId[card.dataset.meal];
+        setTab('plan');
+      }));
+    }
+
+    function renderPantry() {
+      document.querySelector('#pantryGrid').innerHTML = pantry.map(section => `<section class="inventory-panel"><h3>${escapeHtml(section.icon)} ${escapeHtml(section.title)}</h3><ul class="clean-list">${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('');
     }
 
     function render() {
-      const term = search.value.trim().toLowerCase();
-      const visible = meals.filter((meal) => matchesFilter(meal) && textForMeal(meal).includes(term));
-
-      grid.innerHTML = visible.map((meal) => `
-        <article>
-          <span class="type">${escapeHtml(meal.type)}</span>
-          <h2>${escapeHtml(meal.name)}</h2>
-          <div class="chips">
-            ${(meal.base || []).map((item) => `<span class="chip">${escapeHtml(item)}</span>`).join('')}
-          </div>
-          ${(meal.optional_proteins || []).length ? `
-            <p class="section-title">Optional protein</p>
-            <p>${escapeHtml(meal.optional_proteins.join(', '))}</p>
-          ` : ''}
-          <p class="section-title">Angel-safe notes</p>
-          <p>${escapeHtml(meal.angel_safe_notes)}</p>
-          <p class="section-title">Household notes</p>
-          <p>${escapeHtml(meal.household_notes)}</p>
-          <p class="section-title">Prep notes</p>
-          <p>${escapeHtml(meal.prep_notes)}</p>
-          <details>
-            <summary>Ingredients / pull from</summary>
-            <ul>
-              ${(meal.ingredients || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
-            </ul>
-          </details>
-        </article>
-      `).join('') || '<p>No meals match that search yet.</p>';
+      renderPlan();
+      renderPrep();
+      renderMenu();
+      renderPantry();
     }
 
-    fetch('./data/dinners.json')
-      .then((response) => {
-        if (!response.ok) throw new Error('Could not load dinners.json');
-        return response.json();
-      })
-      .then((data) => {
-        const savedDinners = (data.dinners || []).map(normalizeDinner);
-        const savedIds = new Set(savedDinners.map((meal) => meal.id));
-        meals = [
-          ...plannedMeals,
-          ...savedDinners.filter((meal) => !savedIds.has(meal.id) && !plannedMeals.some((planned) => planned.id === meal.id))
-        ];
-        updated.textContent = data.updated ? `Last updated: ${data.updated}` : 'Last updated: 2026-06-14';
-        render();
-      })
-      .catch(() => {
-        updated.textContent = 'Last updated: 2026-06-14';
-        render();
-      });
-
+    document.querySelectorAll('[data-tab]').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
     search.addEventListener('input', render);
-    filter.addEventListener('change', render);
+    document.querySelector('#clearSearch').addEventListener('click', () => { search.value = ''; render(); });
+    document.querySelector('#quickAdd').addEventListener('click', () => setTab('menu'));
     render();
   </script>
 </body>
