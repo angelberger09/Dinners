@@ -11,8 +11,11 @@
       --ink: #3f332b;
       --muted: #75695f;
       --accent: #8ea879;
+      --accent-dark: #49613e;
       --accent-soft: #e5efd9;
+      --warm: #f7dfc6;
       --border: #eadfce;
+      --shadow: rgba(63, 51, 43, 0.06);
     }
 
     * { box-sizing: border-box; }
@@ -38,7 +41,7 @@
     }
 
     .intro {
-      max-width: 760px;
+      max-width: 780px;
       margin: 0;
       color: var(--muted);
       font-size: 1.08rem;
@@ -52,7 +55,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(160px, auto);
       gap: 0.75rem;
       margin-bottom: 1rem;
     }
@@ -70,7 +73,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1rem;
     }
 
@@ -79,12 +82,24 @@
       border: 1px solid var(--border);
       border-radius: 24px;
       padding: 1.1rem;
-      box-shadow: 0 12px 30px rgba(63, 51, 43, 0.06);
+      box-shadow: 0 12px 30px var(--shadow);
     }
 
     article h2 {
-      margin: 0 0 0.65rem;
+      margin: 0 0 0.45rem;
       font-size: 1.25rem;
+    }
+
+    .type {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 0.18rem 0.6rem;
+      background: var(--warm);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
     }
 
     .chips {
@@ -99,7 +114,7 @@
       border-radius: 999px;
       padding: 0.25rem 0.6rem;
       background: var(--accent-soft);
-      color: #49613e;
+      color: var(--accent-dark);
       font-size: 0.85rem;
     }
 
@@ -111,6 +126,27 @@
 
     p {
       margin: 0 0 0.45rem;
+      color: var(--muted);
+    }
+
+    details {
+      margin-top: 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fffdf8;
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 0.7rem 0.85rem;
+      font-weight: 700;
+      color: var(--accent-dark);
+    }
+
+    details ul {
+      margin: 0;
+      padding: 0 1.1rem 0.9rem 2rem;
       color: var(--muted);
     }
 
@@ -130,21 +166,25 @@
 <body>
   <header>
     <h1>Dinners</h1>
-    <p class="intro">A tiny, practical dinner library for cheap stretch meals, freezer prep, gluten-free/dairy-free safety notes, and flexible household swaps.</p>
+    <p class="intro">A tiny practical meal library for cheap stretch meals, gluten-free dinner planning, easy lunches, breakfast backups, snacks, and flexible household swaps.</p>
   </header>
 
   <main>
-    <div class="toolbar" aria-label="Dinner filters">
-      <input id="search" type="search" placeholder="Search dinners, ingredients, or notes..." />
+    <div class="toolbar" aria-label="Meal filters">
+      <input id="search" type="search" placeholder="Search meals, ingredients, or notes..." />
       <select id="filter">
-        <option value="all">All dinners</option>
+        <option value="all">All meals</option>
+        <option value="dinner">Dinners</option>
+        <option value="lunch">Easy lunches</option>
+        <option value="breakfast">Easy breakfasts</option>
+        <option value="snack">Snacks</option>
         <option value="angel">Angel-safe notes</option>
         <option value="freezer">Freezer/prep friendly</option>
         <option value="household">Household swaps</option>
       </select>
     </div>
 
-    <section id="dinnerGrid" class="grid" aria-live="polite"></section>
+    <section id="mealGrid" class="grid" aria-live="polite"></section>
   </main>
 
   <footer>
@@ -152,52 +192,316 @@
   </footer>
 
   <script>
-    const grid = document.querySelector('#dinnerGrid');
+    const grid = document.querySelector('#mealGrid');
     const search = document.querySelector('#search');
     const filter = document.querySelector('#filter');
     const updated = document.querySelector('#updated');
-    let dinners = [];
 
-    function textForDinner(dinner) {
+    const plannedMeals = [
+      {
+        id: 'pork-bean-chili',
+        type: 'dinner',
+        name: 'Pork and Bean Chili',
+        base: ['pork', 'beans', 'red sauce base', 'rice or potatoes'],
+        ingredients: ['shredded pork', 'cooked pinto/black/red beans', 'crushed tomatoes', 'tomato paste', 'salsa', 'bouillon', 'cumin', 'chili powder', 'rice or potatoes'],
+        angel_safe_notes: 'Mostly gluten-free as long as bouillon, salsa, beans, and seasonings are safe.',
+        household_notes: 'Serve over rice or potatoes so people can eat at different times.',
+        prep_notes: 'Freezes well in flat bags or containers.'
+      },
+      {
+        id: 'loaded-potato-bar',
+        type: 'dinner',
+        name: 'Loaded Potato Bar',
+        base: ['potatoes', 'chili or pork', 'cheese', 'salsa'],
+        ingredients: ['russet potatoes', 'pork or chili', 'cheese', 'bacon or turkey bacon', 'salsa', 'frozen vegetables'],
+        angel_safe_notes: 'Use gluten-free toppings and keep non-GF items away from the potato/topping station.',
+        household_notes: 'Very good assemble-your-own meal for staggered dinner times.',
+        prep_notes: 'Bake potatoes ahead or freeze par-cooked wedges/cubes for fresh assembly.'
+      },
+      {
+        id: 'gf-pizza-night',
+        type: 'dinner',
+        name: 'Gluten-Free Pizza Night',
+        base: ['GF crust', 'red sauce', 'pizza cheese', 'pepperoni'],
+        ingredients: ['gluten-free pizza dough', 'red sauce base', 'pizza cheese', 'pepperoni', 'bacon', 'onions and peppers', 'olives', 'Cabot cheddar'],
+        angel_safe_notes: 'Make sauce and crust gluten-free; watch cross-contact with regular bread/tortillas.',
+        household_notes: 'Cabot cheddar can add more real-cheese flavor for everyone who tolerates it.',
+        prep_notes: 'Par-bake crusts or freeze dough portions for easier pizza night.'
+      },
+      {
+        id: 'skillet-night',
+        type: 'dinner',
+        name: 'Skillet Night',
+        base: ['rice or potatoes', 'frozen veg', 'pork or bacon', 'cheese'],
+        ingredients: ['cooked rice or par-cooked potatoes', 'frozen mixed vegetables', 'shredded pork', 'bacon or turkey bacon', 'cheese', 'eggs if wanted'],
+        angel_safe_notes: 'Keep egg optional and use gluten-free seasonings.',
+        household_notes: 'Good use-the-random-bits meal with eggs added only for people who want them.',
+        prep_notes: 'Prep potatoes, rice, pork, and bacon ahead; assemble fresh in a skillet.'
+      },
+      {
+        id: 'soup-night',
+        type: 'dinner',
+        name: 'Soup Night',
+        base: ['broth', 'rice', 'mixed veg', 'pork'],
+        ingredients: ['pork broth or bouillon', 'rice', 'frozen mixed vegetables', 'shredded pork', 'beans or potatoes'],
+        angel_safe_notes: 'Use gluten-free bouillon and keep rice separate if texture matters.',
+        household_notes: 'Simple mild soup base that can be dressed up per bowl.',
+        prep_notes: 'Freeze soup base without rice for best texture.'
+      },
+      {
+        id: 'pasta-night',
+        type: 'dinner',
+        name: 'Pasta Night',
+        base: ['GF pasta', 'regular pasta if needed', 'red sauce', 'breadsticks'],
+        ingredients: ['gluten-free pasta', 'regular pasta for others if needed', 'red sauce base', 'garlic breadsticks', 'cheese', 'optional pork or vegetables'],
+        angel_safe_notes: 'Cook GF pasta separately with clean tools and a separate strainer.',
+        household_notes: 'Regular pasta can be used for the others if needed.',
+        prep_notes: 'Make sauce ahead; cook pasta fresh.'
+      },
+      {
+        id: 'corn-tortilla-pizza-quesadillas',
+        type: 'lunch',
+        name: 'Corn Tortilla Pizza Quesadillas',
+        base: ['corn tortillas', 'sauce', 'cheese', 'pepperoni/bacon'],
+        ingredients: ['corn tortillas', 'red sauce or pizza sauce', 'shredded cheese', 'pepperoni', 'bacon or turkey bacon'],
+        angel_safe_notes: 'Use corn tortillas and gluten-free toppings.',
+        household_notes: 'Easy lunch pizza option without making a full crust.',
+        prep_notes: 'Keep as a small kit and pan-toast fresh.'
+      },
+      {
+        id: 'bean-cheese-tacos',
+        type: 'lunch',
+        name: 'Bean and Cheese Tacos',
+        base: ['corn tortillas', 'beans', 'cheese', 'salsa'],
+        ingredients: ['corn tortillas', 'cooked beans', 'cheese', 'salsa', 'cumin or taco seasoning'],
+        angel_safe_notes: 'Use corn tortillas and safe seasonings.',
+        household_notes: 'Can be kept mild and assembled per person.',
+        prep_notes: 'Cook beans ahead; assemble fresh so tortillas stay better.'
+      },
+      {
+        id: 'tuna-rice-bowl',
+        type: 'lunch',
+        name: 'Tuna Rice Bowl',
+        base: ['tuna', 'rice', 'veg', 'bouillon/salsa'],
+        ingredients: ['tuna', 'cooked rice', 'frozen or cooked vegetables', 'bouillon', 'salsa'],
+        angel_safe_notes: 'Use gluten-free bouillon and keep tuna separate until serving.',
+        household_notes: 'Crimson does not like tuna, so add tuna after his portion is pulled.',
+        prep_notes: 'Prep rice and veg; open tuna fresh.'
+      },
+      {
+        id: 'chickpea-lunch-bowl',
+        type: 'lunch',
+        name: 'Chickpea Snack/Lunch Bowl',
+        base: ['chickpeas', 'rice', 'veg', 'seasonings'],
+        ingredients: ['chickpeas', 'cooked rice', 'frozen or cooked vegetables', 'garlic powder', 'onion powder', 'cumin or Italian seasoning', 'salsa or red sauce'],
+        angel_safe_notes: 'Naturally gluten-free if chickpeas and seasonings are safe.',
+        household_notes: 'Can go taco-style, garlic-bouillon style, or pizza-ish.',
+        prep_notes: 'Store chickpeas plain; pan-crisp fresh if you have energy.'
+      },
+      {
+        id: 'tuna-pasta',
+        type: 'lunch',
+        name: 'Tuna Pasta',
+        base: ['pasta', 'tuna', 'veg', 'sauce'],
+        ingredients: ['gluten-free pasta for Angel', 'regular pasta for others if needed', 'tuna', 'vegetables', 'red sauce or cheesy bouillon sauce'],
+        angel_safe_notes: 'Cook GF pasta separately and add tuna after Crimson’s portion is scooped.',
+        household_notes: 'Crimson can take the no-tuna portion first.',
+        prep_notes: 'Cook pasta fresh; prep sauce/veg ahead.'
+      },
+      {
+        id: 'pb-toast-sandwiches',
+        type: 'lunch',
+        name: 'PB Toast/Sandwiches for Others',
+        base: ['bread', 'peanut butter'],
+        ingredients: ['regular bread', 'peanut butter'],
+        angel_safe_notes: 'Not gluten-free if made with regular bread; keep separate from GF prep.',
+        household_notes: 'Fast emergency food for the non-GF folks.',
+        prep_notes: 'Can pre-make a few sandwiches and fridge or freeze individually.'
+      },
+      {
+        id: 'oatmeal-brown-sugar',
+        type: 'breakfast',
+        name: 'Oatmeal with Brown Sugar',
+        base: ['oats', 'brown sugar', 'almond milk'],
+        ingredients: ['gluten-free oats', 'brown sugar', 'almond milk', 'peanut butter or pumpkin if wanted'],
+        angel_safe_notes: 'Use certified gluten-free oats.',
+        household_notes: 'Easy breakfast station for anyone awake first.',
+        prep_notes: 'Portion dry oats and brown sugar into jars or bags.'
+      },
+      {
+        id: 'breakfast-potatoes-skillet',
+        type: 'breakfast',
+        name: 'Breakfast Potatoes/Skillet',
+        base: ['potatoes', 'bacon/turkey bacon', 'veg', 'optional egg'],
+        ingredients: ['par-cooked potato cubes or wedges', 'bacon or turkey bacon', 'frozen vegetables', 'cheese', 'eggs if wanted'],
+        angel_safe_notes: 'Keep eggs optional for Angel and use gluten-free seasonings.',
+        household_notes: 'Best fresh-assembled instead of frozen as a finished bowl.',
+        prep_notes: 'Par-cook potatoes, dry well, tray-freeze, then cook fresh from frozen.'
+      },
+      {
+        id: 'egg-wraps',
+        type: 'breakfast',
+        name: 'Egg Wraps for the Other 3',
+        base: ['eggs', 'cheese', 'bacon/turkey bacon', 'flour tortilla'],
+        ingredients: ['eggs', 'cheese', 'bacon or turkey bacon', 'flour tortillas'],
+        angel_safe_notes: 'Not Angel’s breakfast and not gluten-free if flour tortillas are used.',
+        household_notes: 'Good grab-and-go breakfast for the other 3 adults.',
+        prep_notes: 'Wrap individually; fridge 3–4 days or freeze extras.'
+      },
+      {
+        id: 'rice-bowl-breakfast',
+        type: 'breakfast',
+        name: 'Leftover Rice Bowl with Pork/Beans',
+        base: ['rice', 'pork', 'beans', 'salsa'],
+        ingredients: ['cooked rice', 'shredded pork', 'cooked beans', 'salsa', 'cheese if wanted'],
+        angel_safe_notes: 'Good gluten-free option when breakfast food sounds bad.',
+        household_notes: 'Works as breakfast, lunch, or emergency dinner.',
+        prep_notes: 'Portion rice, pork, and beans separately for flexible reheating.'
+      },
+      {
+        id: 'pb-tortillas-bread',
+        type: 'snack',
+        name: 'Peanut Butter Tortillas or PB Bread',
+        base: ['peanut butter', 'tortillas or bread'],
+        ingredients: ['peanut butter', 'corn tortillas for GF option', 'regular bread or flour tortillas for others'],
+        angel_safe_notes: 'Use corn tortillas for a gluten-free snack option.',
+        household_notes: 'Regular bread/tortillas are for the non-GF folks.',
+        prep_notes: 'Keep peanut butter easy-access and separate from regular bread crumbs.'
+      },
+      {
+        id: 'cheese-corn-tortillas',
+        type: 'snack',
+        name: 'Cheese + Corn Tortillas',
+        base: ['cheese', 'corn tortillas'],
+        ingredients: ['corn tortillas', 'cheese', 'salsa if wanted'],
+        angel_safe_notes: 'Gluten-free if tortillas and toppings are safe.',
+        household_notes: 'Fast tiny quesadilla or roll-up snack.',
+        prep_notes: 'Assemble fresh so tortillas do not get tough or soggy.'
+      },
+      {
+        id: 'popsicles-ice-pops',
+        type: 'snack',
+        name: 'Popsicles / Ice Pops',
+        base: ['popsicles', 'ice pops'],
+        ingredients: ['freezer pops', 'ice pops'],
+        angel_safe_notes: 'Check labels if needed for gluten/dairy concerns.',
+        household_notes: 'Easy no-prep freezer snack.',
+        prep_notes: 'Put away first when groceries arrive so they do not soften.'
+      },
+      {
+        id: 'snacky-oats',
+        type: 'snack',
+        name: 'Sweet/Snacky Oats',
+        base: ['oats', 'brown sugar', 'peanut butter'],
+        ingredients: ['gluten-free oats', 'brown sugar', 'almond milk', 'peanut butter', 'pumpkin or cinnamon if wanted'],
+        angel_safe_notes: 'Use certified gluten-free oats.',
+        household_notes: 'Can be breakfast, snack, or dessert-ish backup.',
+        prep_notes: 'Pre-portion dry oats and sweetener if helpful.'
+      },
+      {
+        id: 'crisped-chickpeas',
+        type: 'snack',
+        name: 'Roasted or Pan-Crisped Chickpeas',
+        base: ['chickpeas', 'seasonings'],
+        ingredients: ['chickpeas', 'oil', 'salt', 'garlic powder', 'onion powder', 'cumin or paprika'],
+        angel_safe_notes: 'Naturally gluten-free if chickpeas and seasonings are safe.',
+        household_notes: 'Good crunchy snack when there is enough energy to crisp them.',
+        prep_notes: 'Drain and dry well; season after crisping for best texture.'
+      },
+      {
+        id: 'pepperoni-cheese',
+        type: 'snack',
+        name: 'Pepperoni + Cheese',
+        base: ['pepperoni', 'cheese'],
+        ingredients: ['pepperoni', 'cheese'],
+        angel_safe_notes: 'Check pepperoni label and use tolerated cheese.',
+        household_notes: 'Good fast protein snack.',
+        prep_notes: 'Portion into small containers if helpful.'
+      },
+      {
+        id: 'mac-cheese-backup',
+        type: 'snack',
+        name: 'Mac and Cheese Backup for the Other 3',
+        base: ['boxed mac and cheese'],
+        ingredients: ['boxed mac and cheese', 'bacon or turkey bacon', 'frozen veg if wanted'],
+        angel_safe_notes: 'Not gluten-free; keep separate from Angel’s prep tools.',
+        household_notes: 'Quick meal/snack for the other 3.',
+        prep_notes: 'Store boxes together as an emergency backup.'
+      }
+    ];
+
+    let meals = plannedMeals;
+
+    function normalizeDinner(dinner) {
+      return {
+        ...dinner,
+        type: 'dinner',
+        ingredients: dinner.ingredients || [
+          ...(dinner.base || []),
+          ...(dinner.optional_proteins || [])
+        ]
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function textForMeal(meal) {
       return [
-        dinner.name,
-        ...(dinner.base || []),
-        ...(dinner.optional_proteins || []),
-        dinner.angel_safe_notes,
-        dinner.household_notes,
-        dinner.prep_notes
+        meal.type,
+        meal.name,
+        ...(meal.base || []),
+        ...(meal.ingredients || []),
+        ...(meal.optional_proteins || []),
+        meal.angel_safe_notes,
+        meal.household_notes,
+        meal.prep_notes
       ].join(' ').toLowerCase();
     }
 
-    function matchesFilter(dinner) {
-      if (filter.value === 'angel') return Boolean(dinner.angel_safe_notes);
-      if (filter.value === 'freezer') return /freeze|freezer|portion|batch|prep/i.test(dinner.prep_notes || '');
-      if (filter.value === 'household') return Boolean(dinner.household_notes);
+    function matchesFilter(meal) {
+      if (['dinner', 'lunch', 'breakfast', 'snack'].includes(filter.value)) return meal.type === filter.value;
+      if (filter.value === 'angel') return Boolean(meal.angel_safe_notes);
+      if (filter.value === 'freezer') return /freeze|freezer|portion|batch|prep|par-cook|par-bake|fridge/i.test(meal.prep_notes || '');
+      if (filter.value === 'household') return Boolean(meal.household_notes);
       return true;
     }
 
     function render() {
       const term = search.value.trim().toLowerCase();
-      const visible = dinners.filter((dinner) => matchesFilter(dinner) && textForDinner(dinner).includes(term));
+      const visible = meals.filter((meal) => matchesFilter(meal) && textForMeal(meal).includes(term));
 
-      grid.innerHTML = visible.map((dinner) => `
+      grid.innerHTML = visible.map((meal) => `
         <article>
-          <h2>${dinner.name}</h2>
+          <span class="type">${escapeHtml(meal.type)}</span>
+          <h2>${escapeHtml(meal.name)}</h2>
           <div class="chips">
-            ${(dinner.base || []).map((item) => `<span class="chip">${item}</span>`).join('')}
+            ${(meal.base || []).map((item) => `<span class="chip">${escapeHtml(item)}</span>`).join('')}
           </div>
-          ${(dinner.optional_proteins || []).length ? `
+          ${(meal.optional_proteins || []).length ? `
             <p class="section-title">Optional protein</p>
-            <p>${dinner.optional_proteins.join(', ')}</p>
+            <p>${escapeHtml(meal.optional_proteins.join(', '))}</p>
           ` : ''}
           <p class="section-title">Angel-safe notes</p>
-          <p>${dinner.angel_safe_notes}</p>
+          <p>${escapeHtml(meal.angel_safe_notes)}</p>
           <p class="section-title">Household notes</p>
-          <p>${dinner.household_notes}</p>
+          <p>${escapeHtml(meal.household_notes)}</p>
           <p class="section-title">Prep notes</p>
-          <p>${dinner.prep_notes}</p>
+          <p>${escapeHtml(meal.prep_notes)}</p>
+          <details>
+            <summary>Ingredients / pull from</summary>
+            <ul>
+              ${(meal.ingredients || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+            </ul>
+          </details>
         </article>
-      `).join('') || '<p>No dinners match that search yet.</p>';
+      `).join('') || '<p>No meals match that search yet.</p>';
     }
 
     fetch('./data/dinners.json')
@@ -206,16 +510,23 @@
         return response.json();
       })
       .then((data) => {
-        dinners = data.dinners || [];
-        updated.textContent = data.updated ? `Last updated: ${data.updated}` : '';
+        const savedDinners = (data.dinners || []).map(normalizeDinner);
+        const savedIds = new Set(savedDinners.map((meal) => meal.id));
+        meals = [
+          ...plannedMeals,
+          ...savedDinners.filter((meal) => !savedIds.has(meal.id) && !plannedMeals.some((planned) => planned.id === meal.id))
+        ];
+        updated.textContent = data.updated ? `Last updated: ${data.updated}` : 'Last updated: 2026-06-14';
         render();
       })
-      .catch((error) => {
-        grid.innerHTML = `<p>${error.message}</p>`;
+      .catch(() => {
+        updated.textContent = 'Last updated: 2026-06-14';
+        render();
       });
 
     search.addEventListener('input', render);
     filter.addEventListener('change', render);
+    render();
   </script>
 </body>
 </html>
